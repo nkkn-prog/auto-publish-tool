@@ -11,8 +11,8 @@ interface ArticleResult {
 	body: string;
 }
 
-export async function generateDraft(memo: Memo, correctedContent?: string): Promise<ArticleResult> {
-	const prompt = buildArticlePrompt(memo, correctedContent);
+export async function generateDraft(memo: Memo): Promise<ArticleResult> {
+	const prompt = buildArticlePrompt(memo);
 
 	const message = await anthropic.messages.create({
 		model: "claude-sonnet-4-5-20250929",

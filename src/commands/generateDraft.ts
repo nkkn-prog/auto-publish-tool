@@ -39,12 +39,24 @@ async function main() {
 			// 2. ステータスを「生成中」に更新
 			await updateMemoStatus(memo.id, "生成中");
 
-			// 3. ファクトチェック
+			// 3. ファクトチェック（Web検索で事実誤認を検出）
 			const factCheckResult = await withRetry(() => factCheck(memo), "ファクトチェック");
 
-			// 4. Claude APIで記事ドラフト + X投稿文を並行生成（検証済み内容を使用）
+			if (factCheckResult.hasIssues) {
+				// 事実誤認があればSlackで通知し、記事生成をスキップ
+				await updateMemoStatus(memo.id, "未処理");
+				await sendSlackNotification({
+					title: "ファクトチェックで事実誤認が検出されました",
+					message: `*メモ:* ${memo.title}\n\n*指摘事項:*\n${factCheckResult.issues.join("\n")}`,
+					tags: memo.tags,
+				});
+				logger.warn(`メモ "${memo.title}" にファクトチェック指摘あり。メモを修正してください。`);
+				continue;
+			}
+
+			// 4. Claude APIで記事ドラフト + X投稿文を並行生成
 			const [article, xPosts] = await Promise.all([
-				withRetry(() => generateDraft(memo, factCheckResult.correctedContent), "記事ドラフト生成"),
+				withRetry(() => generateDraft(memo), "記事ドラフト生成"),
 				withRetry(() => generateXPosts(memo), "X投稿文生成"),
 			]);
 

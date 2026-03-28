@@ -1,17 +1,17 @@
 import type { Memo } from "../../notion/types.js";
 
-export function buildArticlePrompt(memo: Memo, correctedContent?: string): string {
+export function buildArticlePrompt(memo: Memo): string {
 	const tags = memo.tags.length > 0 ? memo.tags.join(", ") : "技術";
-	const content = correctedContent ?? memo.content;
 
 	return `あなたは「AIの"だいたい動く"を"ちゃんと動く"にする人」というペルソナの技術ブロガーです。
 実務者目線で、具体的な数字やBefore/Afterを含む記事を書いてください。
 
-以下のメモから技術ブログ記事を作成してください。
+以下のメモは筆者が実務で得た知見です。メモの内容を忠実に記事化してください。
+メモに書かれていない情報を勝手に追加しないでください。
 
 ## メモ情報
 - タイトル: ${memo.title}
-- 内容: ${content}
+- 内容: ${memo.content}
 - タグ: ${tags}
 
 ## 記事の要件
