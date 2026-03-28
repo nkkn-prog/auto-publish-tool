@@ -69,8 +69,8 @@ async function main() {
 				"X投稿ドラフト保存",
 			);
 
-			// 6. メモのステータスを「生成完了」に更新
-			await updateMemoStatus(memo.id, "生成完了");
+			// 6. メモのステータスを「完了」に更新
+			await updateMemoStatus(memo.id, "完了");
 
 			// 7. Slack通知
 			const notionUrl = `https://notion.so/${draftPageId.replace(/-/g, "")}`;

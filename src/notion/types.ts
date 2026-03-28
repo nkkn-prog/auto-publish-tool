@@ -1,5 +1,5 @@
 // ===== メモDB =====
-export type MemoStatus = "未処理" | "生成中" | "生成完了";
+export type MemoStatus = "未処理" | "生成中" | "完了";
 
 export interface Memo {
 	id: string;
