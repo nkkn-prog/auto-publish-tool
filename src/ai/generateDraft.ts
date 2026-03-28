@@ -15,7 +15,7 @@ export async function generateDraft(memo: Memo): Promise<ArticleResult> {
 	const prompt = buildArticlePrompt(memo);
 
 	const message = await anthropic.messages.create({
-		model: "claude-sonnet-4-6-20250514",
+		model: "claude-sonnet-4-6-20250131",
 		max_tokens: 4096,
 		messages: [{ role: "user", content: prompt }],
 	});
