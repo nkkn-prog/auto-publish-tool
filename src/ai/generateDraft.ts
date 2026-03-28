@@ -16,7 +16,7 @@ export async function generateDraft(memo: Memo): Promise<ArticleResult> {
 
 	const message = await anthropic.messages.create({
 		model: "claude-sonnet-4-5-20250929",
-		max_tokens: 4096,
+		max_tokens: 16384,
 		messages: [{ role: "user", content: prompt }],
 	});
 
@@ -38,10 +38,20 @@ export async function generateDraft(memo: Memo): Promise<ArticleResult> {
 function parseJsonFromResponse<T>(text: string): T {
 	// ```json ... ``` ブロックから抽出を試みる
 	const jsonBlockMatch = text.match(/```json\s*([\s\S]*?)```/);
-	if (jsonBlockMatch) {
-		return JSON.parse(jsonBlockMatch[1].trim());
-	}
+	const jsonText = jsonBlockMatch ? jsonBlockMatch[1].trim() : text.trim();
 
-	// JSON全体を直接パース
-	return JSON.parse(text.trim());
+	try {
+		return JSON.parse(jsonText);
+	} catch {
+		// JSON文字列内の生の改行をエスケープしてリトライ
+		const fixed = jsonText.replace(/"([^"]*?)"/gs, (_match, content: string) => {
+			const escaped = content
+				.replace(/\\/g, "\\\\")
+				.replace(/\n/g, "\\n")
+				.replace(/\r/g, "\\r")
+				.replace(/\t/g, "\\t");
+			return `"${escaped}"`;
+		});
+		return JSON.parse(fixed);
+	}
 }
