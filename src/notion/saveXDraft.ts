@@ -20,7 +20,7 @@ export async function saveXDraft(input: XDraftInput): Promise<string> {
 				rich_text: [{ text: { content: input.xPost3 } }],
 			},
 			Status: {
-				select: { name: "未承認" },
+				status: { name: "未承認" },
 			},
 			SourceMemo: {
 				relation: [{ id: input.sourceMemoId }],

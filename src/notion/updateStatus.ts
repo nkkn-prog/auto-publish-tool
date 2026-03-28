@@ -6,7 +6,7 @@ export async function updateMemoStatus(pageId: string, status: MemoStatus): Prom
 	await notion.pages.update({
 		page_id: pageId,
 		properties: {
-			Status: { select: { name: status } },
+			Status: { status: { name: status } },
 		},
 	});
 	logger.info(`メモのステータスを更新: ${status}`, { pageId });
@@ -16,7 +16,7 @@ export async function updateDraftStatus(pageId: string, status: DraftStatus): Pr
 	await notion.pages.update({
 		page_id: pageId,
 		properties: {
-			Status: { select: { name: status } },
+			Status: { status: { name: status } },
 		},
 	});
 	logger.info(`ドラフトのステータスを更新: ${status}`, { pageId });
@@ -26,7 +26,7 @@ export async function updateXDraftStatus(pageId: string, status: XDraftStatus): 
 	await notion.pages.update({
 		page_id: pageId,
 		properties: {
-			Status: { select: { name: status } },
+			Status: { status: { name: status } },
 		},
 	});
 	logger.info(`X投稿ドラフトのステータスを更新: ${status}`, { pageId });

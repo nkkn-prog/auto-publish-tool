@@ -13,7 +13,7 @@ export async function fetchApprovedDrafts(): Promise<Draft[]> {
 		database_id: config.notion.draftDbId,
 		filter: {
 			property: "Status",
-			select: {
+			status: {
 				equals: "承認済み",
 			},
 		},

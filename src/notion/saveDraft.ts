@@ -13,7 +13,7 @@ export async function saveDraft(input: DraftInput): Promise<string> {
 				title: [{ text: { content: input.title } }],
 			},
 			Status: {
-				select: { name: "レビュー待ち" },
+				status: { name: "レビュー待ち" },
 			},
 			SourceMemo: {
 				relation: [{ id: input.sourceMemoId }],

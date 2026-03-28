@@ -14,7 +14,7 @@ export async function fetchMemos(): Promise<Memo[]> {
 		database_id: config.notion.memoDbId,
 		filter: {
 			property: "Status",
-			select: {
+			status: {
 				equals: "未処理",
 			},
 		},
@@ -48,7 +48,7 @@ export async function fetchMemos(): Promise<Memo[]> {
 
 		const statusProp = getProperty(props, "Status");
 		const status =
-			statusProp?.type === "select" ? (statusProp.select?.name ?? "未処理") : "未処理";
+			statusProp?.type === "status" ? (statusProp.status?.name ?? "未処理") : "未処理";
 
 		return {
 			id: page.id,

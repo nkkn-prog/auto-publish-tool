@@ -13,7 +13,7 @@ export async function fetchApprovedXDrafts(): Promise<XDraft[]> {
 		database_id: config.notion.xdraftDbId,
 		filter: {
 			property: "Status",
-			select: {
+			status: {
 				equals: "承認済み",
 			},
 		},
