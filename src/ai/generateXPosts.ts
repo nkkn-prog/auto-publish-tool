@@ -16,7 +16,7 @@ export async function generateXPosts(memo: Memo): Promise<XPostsResult> {
 	const prompt = buildXPostPrompt(memo);
 
 	const message = await anthropic.messages.create({
-		model: "claude-sonnet-4-6-20250131",
+		model: "claude-sonnet-4-5-20250929",
 		max_tokens: 1024,
 		messages: [{ role: "user", content: prompt }],
 	});
