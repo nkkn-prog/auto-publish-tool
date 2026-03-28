@@ -1,0 +1,33 @@
+{
+  "name": "auto-publish-tool",
+  "version": "0.0.1",
+  "description": "業務メモからブログ記事・SNS投稿を自動生成・自動投稿するパイプライン",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "generate-draft": "tsx src/commands/generateDraft.ts",
+    "publish-approved": "tsx src/commands/publishApproved.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write ."
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.15",
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@tryfabric/martian": "^1.2.4",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.13.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
