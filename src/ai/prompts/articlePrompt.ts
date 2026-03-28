@@ -21,12 +21,10 @@ export function buildArticlePrompt(memo: Memo): string {
 5. 2000〜4000文字程度
 
 ## 出力形式
-以下のJSON形式で出力してください。他のテキストは含めないでください。
+以下の形式で出力してください。他のテキストは含めないでください。
 
-\`\`\`json
-{
-  "title": "記事タイトル",
-  "body": "Markdown形式の記事本文"
-}
-\`\`\``;
+---TITLE---
+記事タイトル
+---BODY---
+Markdown形式の記事本文`;
 }

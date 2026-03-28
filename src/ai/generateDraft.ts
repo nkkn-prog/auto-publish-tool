@@ -25,7 +25,7 @@ export async function generateDraft(memo: Memo): Promise<ArticleResult> {
 		.map((block) => block.text)
 		.join("");
 
-	const parsed = parseJsonFromResponse<ArticleResult>(text);
+	const parsed = parseDelimitedResponse(text);
 
 	if (!parsed.title || !parsed.body) {
 		throw new Error("Claude APIのレスポンスに title または body が含まれていません");
@@ -35,23 +35,16 @@ export async function generateDraft(memo: Memo): Promise<ArticleResult> {
 	return parsed;
 }
 
-function parseJsonFromResponse<T>(text: string): T {
-	// ```json ... ``` ブロックから抽出を試みる
-	const jsonBlockMatch = text.match(/```json\s*([\s\S]*?)```/);
-	const jsonText = jsonBlockMatch ? jsonBlockMatch[1].trim() : text.trim();
+function parseDelimitedResponse(text: string): ArticleResult {
+	const titleMatch = text.match(/---TITLE---\s*([\s\S]*?)\s*---BODY---/);
+	const bodyMatch = text.match(/---BODY---\s*([\s\S]*)/);
 
-	try {
-		return JSON.parse(jsonText);
-	} catch {
-		// JSON文字列内の生の改行をエスケープしてリトライ
-		const fixed = jsonText.replace(/"([^"]*?)"/gs, (_match, content: string) => {
-			const escaped = content
-				.replace(/\\/g, "\\\\")
-				.replace(/\n/g, "\\n")
-				.replace(/\r/g, "\\r")
-				.replace(/\t/g, "\\t");
-			return `"${escaped}"`;
-		});
-		return JSON.parse(fixed);
+	if (!titleMatch || !bodyMatch) {
+		throw new Error("Claude APIのレスポンスが期待する形式ではありません");
 	}
+
+	return {
+		title: titleMatch[1].trim(),
+		body: bodyMatch[1].trim(),
+	};
 }
