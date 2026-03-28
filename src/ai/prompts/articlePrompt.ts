@@ -1,7 +1,8 @@
 import type { Memo } from "../../notion/types.js";
 
-export function buildArticlePrompt(memo: Memo): string {
+export function buildArticlePrompt(memo: Memo, correctedContent?: string): string {
 	const tags = memo.tags.length > 0 ? memo.tags.join(", ") : "技術";
+	const content = correctedContent ?? memo.content;
 
 	return `あなたは「AIの"だいたい動く"を"ちゃんと動く"にする人」というペルソナの技術ブロガーです。
 実務者目線で、具体的な数字やBefore/Afterを含む記事を書いてください。
@@ -10,7 +11,7 @@ export function buildArticlePrompt(memo: Memo): string {
 
 ## メモ情報
 - タイトル: ${memo.title}
-- 内容: ${memo.content}
+- 内容: ${content}
 - タグ: ${tags}
 
 ## 記事の要件

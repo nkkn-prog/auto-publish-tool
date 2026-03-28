@@ -2,6 +2,7 @@ import { fetchMemos } from "../notion/fetchMemos.js";
 import { saveDraft } from "../notion/saveDraft.js";
 import { saveXDraft } from "../notion/saveXDraft.js";
 import { updateMemoStatus } from "../notion/updateStatus.js";
+import { factCheck } from "../ai/factCheck.js";
 import { generateDraft } from "../ai/generateDraft.js";
 import { generateXPosts } from "../ai/generateXPosts.js";
 import { sendSlackNotification } from "../notifications/slack.js";
@@ -38,9 +39,12 @@ async function main() {
 			// 2. ステータスを「生成中」に更新
 			await updateMemoStatus(memo.id, "生成中");
 
-			// 3. Claude APIで記事ドラフト + X投稿文を並行生成
+			// 3. ファクトチェック
+			const factCheckResult = await withRetry(() => factCheck(memo), "ファクトチェック");
+
+			// 4. Claude APIで記事ドラフト + X投稿文を並行生成（検証済み内容を使用）
 			const [article, xPosts] = await Promise.all([
-				withRetry(() => generateDraft(memo), "記事ドラフト生成"),
+				withRetry(() => generateDraft(memo, factCheckResult.correctedContent), "記事ドラフト生成"),
 				withRetry(() => generateXPosts(memo), "X投稿文生成"),
 			]);
 
